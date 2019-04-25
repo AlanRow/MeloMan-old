@@ -29,14 +29,14 @@ namespace SpectrumVisor
         {
             /*Программа, которая рисует распределение центра "массы" при дискретном преобразовании Фурье*/
 
-            int length = 1024;
+            //int length = 1024;
 
             //Изначальный сигнал
             //var origin = new double[length];
             //CreateSinSignal(origin, 0, length, 8, 0, 100);
 
             //распределение центра массы 
-            Application.Run(new TransformViewer());
+            Application.Run(new SpectrumVisorForm());
         }
 
     }
@@ -46,6 +46,7 @@ namespace SpectrumVisor
         private double[] origin;
         public double W { get; set; }//in grades
         public double WStep { get; set; }
+        public int StepsCount { get; set; }
         private int start;
 
         public int Start
@@ -63,6 +64,8 @@ namespace SpectrumVisor
             Start = 0;
             WinSize = signal.Length;
             W = Math.PI / 180;
+            WStep = 1;
+            StepsCount = 16;
         }
 
         //Find Mass Center
@@ -77,19 +80,19 @@ namespace SpectrumVisor
             return fmc;
         }
 
-        public Complex[] FMCs(int count, double freqStep)
+        public Complex[] FMCs()
         {
-            var fmcs = new Complex[count];
+            var fmcs = new Complex[StepsCount];
             var norm = normalizeSignal(origin);
             File.Delete("norm.txt");
             File.AppendAllText("norm.txt", norm.Sum().ToString());
 
             var logs = new List<string>();
 
-            for (var i = 1; i <= count; i++)
+            for (var i = 1; i <= StepsCount; i++)
             {
                 //logs.Add("i: " + i);
-                var step = 1 / (i * freqStep);
+                var step = 1 / (i * WStep);
                 for (var j = Start; j < Start + WinSize; j++)
                 {
                     fmcs[i - 1] += norm[j % norm.Length] * Complex.FromPolarCoordinates(1, -step * 2 * Math.PI * j);
@@ -168,7 +171,7 @@ namespace SpectrumVisor
             MC = confs.FMC();
 
             MCPicture = new Panel();
-            MCPicture.SetBounds(450, 0, 700, 700);
+            MCPicture.SetBounds(450, 0, 400, 400);
             MCPicture.Paint += (sender, ev) =>
             {
                 var gr = ev.Graphics;
@@ -179,13 +182,22 @@ namespace SpectrumVisor
 
                 Tuple<float, float> previous = null;
                 var logs = new List<string>();
-                var centers = confs.FMCs(10, 1);
+                var centers = confs.FMCs();
 
-                foreach (var c in centers)
+                for (var i = 0; i < centers.Length; i++)
                 {
+                    var c = centers[i];
+
                     logs.Add("magnitude: " + c.Magnitude + ",   complex: " + c.ToString());
                     var cmCoord = Tuple.Create((float)(halfWidth + halfWidth * c.Real), (float)(halfHeight + halfHeight * c.Imaginary));
+
                     gr.FillEllipse(Brushes.Red, cmCoord.Item1, cmCoord.Item2, 20, 20);
+
+                    var wValue = new Label();
+                    wValue.Text = (i * (confs.WStep + 1)).ToString() + " T";
+                    wValue.Location = new Point((int)cmCoord.Item1 + 15, (int)cmCoord.Item2 + 15);
+                    MCPicture.Controls.Add(wValue);
+
                     if (previous != null)
                         gr.DrawLine(Pens.Green, previous.Item1, previous.Item2, cmCoord.Item1, cmCoord.Item2);
                     previous = cmCoord;
@@ -217,6 +229,7 @@ namespace SpectrumVisor
             };
             Controls.Add(MCPicture);
 
+            InitFTControllers();
             InitOriginControllers();
         }
 
@@ -276,16 +289,13 @@ namespace SpectrumVisor
 
                     origin.SetSignal(int.Parse(sizeBox.Text), int.Parse(repeatsBox.Text), center, factor);
                     confs = new MCConf(origin.Signal);
-                    //MCPicture.Controls
-                    //SetOrigin(256, 0, 4, 0, 1);
                     RepaintOrigin();
                 }
                 catch (FormatException ex)
                 {
                     setOriginButton.Text = "Some Error";
                 }
-
-                //originChart = BuildOriginChart();
+                
                 confs = new MCConf(origin.Signal);
                 Invalidate();
             };
@@ -294,74 +304,48 @@ namespace SpectrumVisor
 
         private void InitFTControllers()
         {
-            var wTitle = new Label();
-            wTitle.Location = new Point(400, 435);
-            wTitle.Text = "Step of w:";
-            Controls.Add(wTitle);
+            var table = new TableLayoutPanel();
 
-            var wBox = new TextBox();
-            wBox.SetBounds(400, 460, 100, 30);
-           // wBox.Text = origin.;
-            //Controls.Add(sizeBox);
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 33));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 33));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 34));
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40));
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60));
 
-            var repeatsTitle = new Label();
-            repeatsTitle.Location = new Point(50, 500);
-            repeatsTitle.Text = "Number of repeats:";
-            Controls.Add(repeatsTitle);
+            var WStepTitle = new Label();
+            WStepTitle.Text = "Step of frequency: ";
+            table.Controls.Add(WStepTitle, 0, 0);
 
-            var repeatsBox = new TextBox();
-            repeatsBox.SetBounds(50, 550, 100, 30);
-            repeatsBox.Text = origin.Repeats.ToString();
-            Controls.Add(repeatsBox);
+            var WStepBox = new TextBox();
+            WStepBox.Text = confs.WStep.ToString();
+            WStepBox.Dock = DockStyle.Fill;
+            table.Controls.Add(WStepBox, 1, 0);
 
-            var centerTitle = new Label();
-            centerTitle.Location = new Point(200, 435);
-            centerTitle.Text = "Y of center line:";
-            Controls.Add(centerTitle);
+            var stepCountTitle = new Label();
+            stepCountTitle.Text = "Count of steps: ";
+            table.Controls.Add(stepCountTitle, 0, 1);
 
-            var centerBox = new TextBox();
-            centerBox.SetBounds(200, 460, 100, 30);
-            centerBox.Text = origin.AverageLine.ToString();
-            Controls.Add(centerBox);
+            var stepCountBox = new TextBox();
+            stepCountBox.Text = confs.StepsCount.ToString();
+            stepCountBox.Dock = DockStyle.Fill;
+            table.Controls.Add(stepCountBox, 1, 1);
 
-            var factorTitle = new Label();
-            factorTitle.Location = new Point(200, 500);
-            factorTitle.Text = "Factor of the Sin-function:";
-            Controls.Add(factorTitle);
-
-            var factorBox = new TextBox();
-            factorBox.SetBounds(200, 550, 100, 30);
-            factorBox.Text = origin.Deviance.ToString();
-            Controls.Add(factorBox);
-
-            var setOriginButton = new Button();
-            setOriginButton.SetBounds(100, 620, 100, 40);
-            setOriginButton.Text = "Set signal";
-            setOriginButton.Click += (sender, ev) =>
+            var applyButton = new Button();
+            applyButton.Text = "Apply";
+            applyButton.Click += (sender, ev) =>
             {
-                try
-                {
-                    var center = double.Parse(centerBox.Text);
-                    var factor = double.Parse(factorBox.Text);
-                    var min = center - factor / 2;
-                    var max = center + factor / 2;
+                confs.WStep = double.Parse(WStepBox.Text);
+                confs.StepsCount = int.Parse(stepCountBox.Text);
 
-                    //origin.SetSignal(int.Parse(sizeBox.Text), int.Parse(repeatsBox.Text), center, factor);
-                    confs = new MCConf(origin.Signal);
-                    //MCPicture.Controls
-                    //SetOrigin(256, 0, 4, 0, 1);
-                    RepaintOrigin();
-                }
-                catch (FormatException ex)
-                {
-                    setOriginButton.Text = "Some Error";
-                }
-
-                //originChart = BuildOriginChart();
-                confs = new MCConf(origin.Signal);
                 Invalidate();
             };
-            Controls.Add(setOriginButton);
+
+            table.Controls.Add(applyButton, 0, 2);
+            table.Controls.Add(new Panel(), 1, 2);
+
+            table.Location = new Point(400, 500);
+
+            Controls.Add(table);
         }
 
 
