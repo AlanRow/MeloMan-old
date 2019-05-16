@@ -10,60 +10,89 @@ namespace SpectrumVisor
 {
     class SignalsList : FlowLayoutPanel
     {
+        private static int frameHeight = 100;
+        private Button addButton;
+
         public SignalsList(SignalManager manager) : base()
         {
-            FlowDirection = FlowDirection.TopDown;
-            //Height = 300;
+            Height = (manager.Signals.Count + 1) * frameHeight + 50;
+
+            FlowDirection = FlowDirection.LeftToRight;
+            AutoScroll = true;
+            HScroll = false;
+
+            manager.AddedSignal += (values, index) =>
+            {
+                Controls.Remove(addButton);
+                Controls.Add(GetSignalFrame(manager, index));
+                Controls.Add(addButton);
+            };
+
+            manager.DeletedSignal += (values, index) =>
+            {
+                Controls.RemoveAt(index);
+            };
+
+            addButton = GetAddButton(manager);
 
             for (var i = 0; i < manager.Signals.Count; i++)
             {
                 var j = i;
-                var signalFrame = new Panel
+                var signalFrame = GetSignalFrame(manager, j);
+             }
+            
+            Controls.Add(addButton);
+        }
+
+        private Button GetAddButton(SignalManager manager)
+        {
+            var button = new Button
+            {
+                Height = frameHeight - 10,
+                Width = Width - 20,
+                Text = "Добавить"
+            };
+
+            button.Click += (sender, ev) =>
+            {
+                var creatingDialog = new AddSignalDialog(manager).ShowDialog();
+            };
+
+            return button;
+        }
+
+            private Panel GetSignalFrame(SignalManager manager, int i)
+        {
+            var frame = new Panel
                 {
                     BorderStyle = BorderStyle.FixedSingle,
-                    Height = 60,
-                    Width = Width
+                    Height = frameHeight,
+                    Width = Width - 20
                 };
 
-                var delButton = new Button
+            var delButton = new Button
                 {
                     Dock = DockStyle.Bottom,
                     Text = "Удалить"
                 };
 
-                delButton.Click += (sender, ev) =>
+            delButton.Click += (sender, ev) =>
                 {
-                    new SignalDeleteConfirm(manager, j).ShowDialog();
+                    new SignalDeleteConfirm(manager, i).ShowDialog();
                 };
 
-                var formula = new Label
+            var formula = new Label
                 {
                     Dock = DockStyle.Top,
-                    Text = manager.Signals[j].GetTextFormula(),
+                    Text = manager.Signals[i].GetTextFormula(),
                     Font = new Font("Arial", 10)
                 };
 
-                signalFrame.Controls.Add(formula);
-                signalFrame.Controls.Add(delButton);
-                Controls.Add(signalFrame);
-            }
+            frame.Controls.Add(formula);
+            frame.Controls.Add(delButton);
+            Controls.Add(frame);
 
-            var addButton = new Button
-            {
-                Height = 40,
-                Width = Width,
-                Text = "Add signal"
-            };
-
-            addButton.Click += (sender, ev) =>
-            {
-                var creatingDialog = new AddSignalDialog(manager).ShowDialog();
-            };
-
-            Controls.Add(addButton);
-            //this.VScroll = true;
-            //VerticalScroll.Enabled = true;
-            //AutoScroll = true;
+            return frame;
         }
     }
 }

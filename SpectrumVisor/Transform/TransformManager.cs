@@ -34,12 +34,12 @@ namespace SpectrumVisor
             StartFreq = 1;
             FreqStep = 1;
 
-            sign.AddedSignal += (values) =>
+            sign.AddedSignal += (values, index) =>
             {
                 UpdateSpectrum();
             };
 
-            sign.DeletedSignal += (values) =>
+            sign.DeletedSignal += (values, index) =>
             {
                 UpdateSpectrum();
             };

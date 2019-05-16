@@ -13,7 +13,7 @@ namespace SpectrumVisor
         public double TimeDuration { get; private set; }
         public int Size { get; private set; }
 
-        public delegate void SignalsChanged(SinGenerator gener);
+        public delegate void SignalsChanged(SinGenerator gener, int index);
         public event SignalsChanged AddedSignal;
         public event SignalsChanged DeletedSignal;
 
@@ -39,7 +39,7 @@ namespace SpectrumVisor
             Signals.Add(gen);
 
             if (AddedSignal != null)
-                AddedSignal(gen);
+                AddedSignal(gen, Signals.Count - 1);
 
             return signal;
         }
@@ -52,7 +52,7 @@ namespace SpectrumVisor
 
             if (DeletedSignal != null)
             {
-                DeletedSignal(deleting);
+                DeletedSignal(deleting, index);
             }
         }
 

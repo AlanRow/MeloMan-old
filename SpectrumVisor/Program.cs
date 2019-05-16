@@ -15,6 +15,7 @@ namespace SpectrumVisor
         [STAThread]
         static void Main()
         {
+
             Application.Run(new SpectrumVisorForm());
         }
     }

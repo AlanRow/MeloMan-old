@@ -39,10 +39,14 @@ namespace SpectrumVisor
             spectrumPanel = new SpectrumPanel(signal, transform);
             //spectrumPanel.Location = new Point(450, 0);
 
-            table.Controls.Add(signalPanel);
+            //table.Controls.Add(signalPanel);
+
+
             //table.Controls.Add(spectrumPanel);
             //Controls.Add(table);
             Controls.Add(signalPanel);
+
+            //Controls.Add(new SignalsList(signal));
         }
     }
 }

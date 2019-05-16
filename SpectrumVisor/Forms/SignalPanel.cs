@@ -77,13 +77,13 @@ namespace SpectrumVisor
 
             Reconstruct();
 
-            signals.AddedSignal += (values) =>
+            signals.AddedSignal += (values, index) =>
             {
                 Reconstruct();
                 Invalidate();
             };
 
-            signals.DeletedSignal += (values) =>
+            signals.DeletedSignal += (values, index) =>
             {
                 Reconstruct();
                 Invalidate();

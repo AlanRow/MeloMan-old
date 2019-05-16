@@ -12,11 +12,12 @@ namespace SpectrumVisor
     {
         public SignalDeleteConfirm(SignalManager manager, int signalNumber)
         {
-            MaximumSize = new Size(300, 200);
-            MinimumSize = new Size(300, 200);
+            MaximumSize = new Size(400, 300);
+            MinimumSize = new Size(400, 300);
 
             var message = new Label
             {
+                Width = 250,
                 Text = "Вы уверены что хотите удалить сигнал " + manager.Signals[signalNumber].GetTextFormula() + " из списка сигналов.",
                 Location = new Point(50, 100)
             };
@@ -26,7 +27,10 @@ namespace SpectrumVisor
                 Location = new Point(100, 150),
                 Text = "Да"
             };
-            okButton.Click += (sender, ev) => { manager.DeleteSignal(signalNumber); };
+            okButton.Click += (sender, ev) => {
+                manager.DeleteSignal(signalNumber);
+                Close();
+            };
 
             var cancelButton = new Button()
             {
