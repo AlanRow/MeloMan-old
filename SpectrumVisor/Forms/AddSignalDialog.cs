@@ -18,7 +18,7 @@ namespace SpectrumVisor
         private double freq;
         private double c;
 
-        public AddSignalDialog(SignalManager signals, SignalPanel container)
+        public AddSignalDialog(SignalManager signals)
         {
             //Width = 400;
             //Height = 600;
@@ -54,7 +54,7 @@ namespace SpectrumVisor
             };
             okButton.Click += (sender, ev) =>
             {
-                container.AddSignal((int)start, (int)dur, 0, freq, mult, c, 0);
+                signals.AddSignalBySize((int)start, (int)dur, 0, freq, mult, c, 0);
             };
 
             table.Controls.Add(okButton, 0, 3);

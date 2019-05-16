@@ -13,6 +13,10 @@ namespace SpectrumVisor
     {
         public SignalChart(List<SinGenerator> signals, int size) : base()
         {
+            var log = new Logger("chart1.txt");
+            log.WriteLog(Width + ", " + Height);
+            log.Flush();
+
             Titles.Add("Signals");
             ChartAreas.Add("signal");
 

@@ -58,6 +58,12 @@
     <Compile Include="Forms\RoundSpectrum.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\SignalDeleteConfirm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SignalsList.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\SpectrumPanel.cs">
       <SubType>Component</SubType>
     </Compile>
