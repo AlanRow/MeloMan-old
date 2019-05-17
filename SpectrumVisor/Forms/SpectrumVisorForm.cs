@@ -19,34 +19,27 @@ namespace SpectrumVisor
             Height = 800;
 
             var signal = new SignalManager(10, 1024);
-            signal.AddSignalBySize(0, 1024, 0, 1.0/ 256, 10, 0, 0);
-            signal.AddSignalBySize(0, 1024, 0, 1.0 / 64, 5, 0, 0);
-            signal.AddSignalBySize(0, 1024, 0, 1.0 / 32, 1, 5, 0);
+            //signal.AddSignalBySize(0, 1024, 0, 1.0/ 256, 10, 0, 0);
+            //signal.AddSignalBySize(0, 1024, 0, 1.0 / 64, 5, 0, 0);
+            //signal.AddSignalBySize(0, 1024, 0, 1.0 / 32, 1, 5, 0);
 
             var transform = new TransformManager(new FourierTransformer(), signal);
-
-            var table = new FlowLayoutPanel();
-            table.FlowDirection = FlowDirection.LeftToRight;
-
+            
             signalPanel = new SignalPanel(signal);
-
-            table.Width = 600;
-            table.Height = 800;
-
-            signalPanel.Width = 600;
-            signalPanel.Height = 800;
+            signalPanel.MaximumSize = new Size(400, 600);
 
             spectrumPanel = new SpectrumPanel(signal, transform);
-            //spectrumPanel.Location = new Point(450, 0);
 
-            //table.Controls.Add(signalPanel);
-
-
-            //table.Controls.Add(spectrumPanel);
-            //Controls.Add(table);
             Controls.Add(signalPanel);
+            Controls.Add(spectrumPanel);
 
-            //Controls.Add(new SignalsList(signal));
+
+            Load += (sender, ev) => OnSizeChanged(EventArgs.Empty);
+            SizeChanged += (sender, ev) =>
+            {
+                signalPanel.Size = new Size(Width * 40 / 100, Height - 100);
+                spectrumPanel.SetBounds(Width * 45 / 100, 0, Width / 2, Height - 100);
+            };
         }
     }
 }

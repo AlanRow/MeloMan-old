@@ -20,8 +20,6 @@ namespace SpectrumVisor
         private SignalManager signal;
         private TransformManager spectrum;
 
-        private TableLayoutPanel table;
-
         private ViewVersion viewVariant;
 
         private Dictionary<ViewVersion, PictureBox> views;
@@ -34,63 +32,60 @@ namespace SpectrumVisor
             signal = manager;
             spectrum = transformer;
 
-
-            Width = 400;
-            Height = 600;
-
-            var log = new Logger("spec_pan_size.txt");
-            log.WriteLog("Width: " + Width);
-            log.WriteLog("Height: " + Height);
-            log.Flush();
-
-            //Dock = DockStyle.Fill;
-
             viewVariant = ViewVersion.Round;
-
-            table = new TableLayoutPanel();
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 
             currentView = new PictureBox();
             options = new OptionsPanel(spectrum);
-            options.Width = 400;
-            options.Height = 400;
 
-            table.Controls.Add(currentView, 0, 0);
-            table.Controls.Add(options, 0, 1);
-
-            Controls.Add(table);
+            Controls.Add(currentView);
+            Controls.Add(options);
+            
 
             views = new Dictionary<ViewVersion, PictureBox>();
+            Update();
 
             spectrum.Retransformed += () =>
             {
-                update();
+                Update();
             };
 
-            update();
+            SizeChanged += (sender, ev) =>
+            {
+                var chartSize = Math.Min(Width, Height * 70 / 100);
+                currentView.Size = new Size(chartSize, chartSize);
+                options.SetBounds(0, chartSize + 25, Width, Math.Max(250, Height / 4));
+
+                currentView.Invalidate();
+            };
         }
 
-        private void update()
+        private void InitViews()
         {
             var spec = spectrum.GetSpectrum();
-
             //разные представления спектра
             //views[ViewVersion.Linear] = new LinearSpectrum(spec);
-            views[ViewVersion.Round] = new RoundSpectrum(spec);
             //views[ViewVersion.Color] = new ColorSpectrum(spec);
-
-            SwitchView();
+            views[ViewVersion.Round] = new RoundSpectrum(spec);
         }
 
-        public void SwitchView()
+        private void Update()
         {
-            table.Controls.Remove(currentView);
+            InitViews();
+            Controls.Remove(currentView);
             currentView = views[viewVariant];
-            currentView.Dock = DockStyle.Fill;
-            table.Controls.Add(currentView, 0, 0);
+            //currentView.Dock = DockStyle.Fill;
+            Controls.Add(currentView);
+            OnSizeChanged(EventArgs.Empty);
             Invalidate();
         }
+
+        //public void SwitchView()
+        //{
+        //    Controls.Remove(currentView);
+        //    currentView = views[viewVariant];
+        //    currentView.Dock = DockStyle.Fill;
+        //    Controls.Add(currentView);
+        //    Invalidate();
+        //}
     }
 }

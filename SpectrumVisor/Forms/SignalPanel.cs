@@ -27,53 +27,17 @@ namespace SpectrumVisor
 
         public SignalPanel(SignalManager signals) : base()
         {
-            var mainTable = new TableLayoutPanel();
-
             signalState = signals;
             viewType = SignalViewType.Signals;
 
             signalViewes = new Dictionary<SignalViewType, Chart>();
+            InitCharts();
+            currentView = signalViewes[viewType];
+
             signalsList = new SignalsList(signals);
 
             viewSwitchButton = new Button();
-            viewSwitchButton.Location = new Point(0, 0);
-            switch (viewType)
-            {
-                case SignalViewType.Signals:
-                    viewSwitchButton.Text = "Суммарный";
-                    viewSwitchButton.Click += (sender, ev) =>
-                    {
-                        viewType = SignalViewType.Sum;
-                        Invalidate();
-                    };
-                    break;
-                case SignalViewType.Sum:
-                    viewSwitchButton.Text = "Разделенный";
-                    viewSwitchButton.Click += (sender, ev) =>
-                    {
-                        viewType = SignalViewType.Signals;
-                        Invalidate();
-                    };
-                    break;
-            }
-
-
-            viewSwitchButton.Click += (sender, ev) =>
-            {
-                //увеличенный график
-                var dialog = new Form();
-
-                //отображается при клике по уменьшенному
-                currentView.MouseClick += (obj, even) =>
-                {
-                    var bigChart = new SignalChart(signalState.Signals, signalState.Size);
-                    bigChart.Width = 750;
-                    bigChart.Height = 750;
-                    dialog.Controls.Add(bigChart);
-                    dialog.ShowDialog();
-                };
-            };
-
+            viewSwitchButton = GetSwitchButton();
 
             Reconstruct();
 
@@ -89,40 +53,77 @@ namespace SpectrumVisor
                 Invalidate();
             };
 
-            mainTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
-            mainTable.RowStyles.Add(new RowStyle(SizeType.Percent, 40));
-            mainTable.RowStyles.Add(new RowStyle(SizeType.Percent, 55));
-            mainTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            Controls.Add(currentView);
+            Controls.Add(viewSwitchButton);
+            Controls.Add(signalsList);
 
-            viewSwitchButton.Dock = DockStyle.Fill;
-            mainTable.Controls.Add(viewSwitchButton, 0, 0);
+            SizeChanged += (sender, ev) =>
+            {
+                currentView.SetBounds(0, 0, Height / 2, Height / 2);
 
+                viewSwitchButton.Location = new Point(currentView.Width - viewSwitchButton.Width, 
+                                                      currentView.Height);
+
+                var listPrefs = signalsList.PreferredSize;
+                signalsList.SetBounds(0, currentView.Height + viewSwitchButton.Height,
+                                      listPrefs.Width, listPrefs.Height);
+            };
+        }
+
+        private void InitCharts()
+        {
+            Reconstruct();
+            
             foreach (var view in signalViewes.Values)
             {
-                view.Visible = false;
-                view.Dock = DockStyle.Fill;
-                mainTable.Controls.Add(view, 0, 1);
-            }
+                //увеличенный график
+                var dialog = new Form();
 
-            currentView = signalViewes[viewType];
-            signalsList.Dock = DockStyle.Fill;
-            mainTable.Controls.Add(signalsList, 0, 2);
-            Controls.Add(mainTable);
+                //отображается при клике по уменьшенному
+                view.MouseClick += (obj, even) =>
+                {
+                    var bigChart = new SignalChart(signalState.Signals, signalState.Size);
+                    bigChart.Width = 750;
+                    bigChart.Height = 750;
+                    dialog.Controls.Add(bigChart);
+                    dialog.ShowDialog();
+                };
+            }
+        }
+
+        private Button GetSwitchButton()
+        {
+            var button = new Button();
+            button.Click += (sender, ev) =>
+            {
+                switch (viewType)
+                {
+                    case SignalViewType.Signals:
+                        viewSwitchButton.Text = "Суммарный";
+                        viewType = SignalViewType.Sum;
+                        Invalidate();
+                        break;
+                    case SignalViewType.Sum:
+                        viewSwitchButton.Text = "Разделенный";
+                        viewType = SignalViewType.Signals;
+                        Invalidate();
+                        break;
+                }
+                
+                Controls.Remove(currentView);
+                currentView = signalViewes[viewType];
+                Controls.Add(currentView);
+                OnSizeChanged(EventArgs.Empty);
+                Invalidate();
+            };
+
+            return button;
         }
 
         private void Reconstruct()
         {
             signalViewes[SignalViewType.Signals] = new SignalChart(signalState.Signals, signalState.Size);
             signalViewes[SignalViewType.Sum] = new SignalChart(signalState.Sum);
-            //currentView.SetBounds(0, 25, Width, (int)(Height * 40 / 100));
-            //signalsList.SetBounds(0, Height * 40 / 100 + 50, Width, Height * 55 / 100);
-        }
-
-        protected override void OnPaint(PaintEventArgs args)
-        {
-            currentView.Visible = false;
-            signalViewes[viewType].Visible = true;
-            currentView = signalViewes[viewType];
         }
     }
 }

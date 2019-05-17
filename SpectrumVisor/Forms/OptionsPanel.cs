@@ -18,10 +18,9 @@ namespace SpectrumVisor
         public OptionsPanel(TransformManager manager) : base()
         {
             transform = manager;
-            Width = 400;
-            Height = 200;
 
             var table = new TableLayoutPanel();
+            table.Dock = DockStyle.Fill;
 
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 30));
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 30));
@@ -77,14 +76,11 @@ namespace SpectrumVisor
             table.Controls.Add(freqStartPan, 0, 0);
             table.Controls.Add(freqStepPan, 1, 0);
             table.Controls.Add(freqCountPan, 0, 1);
+            table.Controls.Add(new Panel(), 1, 1);
             table.Controls.Add(updateButton, 0, 2);
+            table.Controls.Add(new Panel(), 1, 2);
             table.SetColumnSpan(updateButton, 2);
             Controls.Add(table);
-
-            var log = new Logger("opt_size.txt");
-            log.WriteLog("Width: " + Width);
-            log.WriteLog("Height: " + Height);
-            log.Flush();
         }
     }
 }

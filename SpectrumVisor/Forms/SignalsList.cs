@@ -16,10 +16,14 @@ namespace SpectrumVisor
         public SignalsList(SignalManager manager) : base()
         {
             Height = (manager.Signals.Count + 1) * frameHeight + 50;
+            FlowDirection = FlowDirection.TopDown;
 
-            FlowDirection = FlowDirection.LeftToRight;
-            AutoScroll = true;
-            HScroll = false;
+            ScrollBar scroll = new VScrollBar();
+            scroll.Dock = DockStyle.Right;
+            scroll.Scroll += (sender, ev) =>
+            {
+                VerticalScroll.Value = scroll.Value;
+            };
 
             manager.AddedSignal += (values, index) =>
             {
@@ -42,6 +46,7 @@ namespace SpectrumVisor
              }
             
             Controls.Add(addButton);
+            Controls.Add(scroll);
         }
 
         private Button GetAddButton(SignalManager manager)
