@@ -16,19 +16,19 @@ namespace SpectrumVisor
         public SignalsList(SignalManager manager) : base()
         {
             Height = (manager.Signals.Count + 1) * frameHeight + 50;
-            FlowDirection = FlowDirection.TopDown;
+            FlowDirection = FlowDirection.LeftToRight;
 
-            ScrollBar scroll = new VScrollBar();
-            scroll.Dock = DockStyle.Right;
-            scroll.Scroll += (sender, ev) =>
-            {
-                VerticalScroll.Value = scroll.Value;
-            };
+            //ScrollBar scroll = new VScrollBar();
+            //scroll.Dock = DockStyle.Right;
+            //scroll.Scroll += (sender, ev) =>
+            //{
+            //    VerticalScroll.Value = scroll.Value;
+            //};
 
-            manager.AddedSignal += (values, index) =>
+            manager.AddedSignal += (sin, index) =>
             {
                 Controls.Remove(addButton);
-                Controls.Add(GetSignalFrame(manager, index));
+                Controls.Add(GetSignalFrame(manager, sin, index));
                 Controls.Add(addButton);
             };
 
@@ -42,11 +42,11 @@ namespace SpectrumVisor
             for (var i = 0; i < manager.Signals.Count; i++)
             {
                 var j = i;
-                var signalFrame = GetSignalFrame(manager, j);
+                var signalFrame = GetSignalFrame(manager, manager.Signals[i], j);
              }
             
             Controls.Add(addButton);
-            Controls.Add(scroll);
+            //Controls.Add(scroll);
         }
 
         private Button GetAddButton(SignalManager manager)
@@ -66,7 +66,7 @@ namespace SpectrumVisor
             return button;
         }
 
-            private Panel GetSignalFrame(SignalManager manager, int i)
+        private Panel GetSignalFrame(SignalManager manager, SinGenerator signal, int i)
         {
             var frame = new Panel
                 {
@@ -83,7 +83,7 @@ namespace SpectrumVisor
 
             delButton.Click += (sender, ev) =>
                 {
-                    new SignalDeleteConfirm(manager, i).ShowDialog();
+                    new SignalDeleteConfirm(manager, signal).ShowDialog();
                 };
 
             var formula = new Label

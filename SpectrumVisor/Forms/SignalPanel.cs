@@ -35,7 +35,6 @@ namespace SpectrumVisor
             currentView = signalViewes[viewType];
 
             signalsList = new SignalsList(signals);
-
             viewSwitchButton = new Button();
             viewSwitchButton = GetSwitchButton();
 

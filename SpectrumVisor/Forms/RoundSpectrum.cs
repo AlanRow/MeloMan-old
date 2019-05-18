@@ -41,7 +41,8 @@ namespace SpectrumVisor
                 {
                     Text = i.ToString(),
                     Location = current.Value,
-                    Width = 10
+                    Width = 10,
+                    BackColor = Color.Transparent
                 };
                 Controls.Add(number);
 

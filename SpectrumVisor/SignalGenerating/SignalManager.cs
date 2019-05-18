@@ -56,6 +56,14 @@ namespace SpectrumVisor
             }
         }
 
+        public void DeleteSignal(SinGenerator signal)
+        {
+            var i = Signals.IndexOf(signal);
+
+            if (i >= 0)
+                DeleteSignal(i);
+        }
+
         private void ReCalcSum()
         {
             var newSum = new double[Sum.Length];

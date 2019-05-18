@@ -20,8 +20,10 @@ namespace SpectrumVisor
 
         public AddSignalDialog(SignalManager signals)
         {
-            //Width = 400;
-            //Height = 600;
+            //фиксирование размеров
+            Width = 400;
+            Height = 600;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
 
             name = "no_name";
             start = 0;
@@ -35,8 +37,6 @@ namespace SpectrumVisor
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 25));
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 25));
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 25));
-            //table.RowStyles.Add(new RowStyle(SizeType.Percent, 15));
-            //table.RowStyles.Add(new RowStyle(SizeType.Percent, 20));
 
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
