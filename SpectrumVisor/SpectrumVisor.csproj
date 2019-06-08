@@ -48,6 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddInform\FreqPoint.cs" />
+    <Compile Include="AddInform\RoundOptions.cs" />
     <Compile Include="Forms\AddSignalDialog.cs">
       <SubType>Form</SubType>
     </Compile>

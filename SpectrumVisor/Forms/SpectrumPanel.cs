@@ -22,8 +22,8 @@ namespace SpectrumVisor
 
         private ViewVersion viewVariant;
 
-        private Dictionary<ViewVersion, PictureBox> views;
-        private PictureBox currentView;
+        private Dictionary<ViewVersion, Panel> views;
+        private Panel currentView;
 
         private OptionsPanel options;
 
@@ -34,14 +34,14 @@ namespace SpectrumVisor
 
             viewVariant = ViewVersion.Round;
 
-            currentView = new PictureBox();
+            currentView = new Panel();
             options = new OptionsPanel(spectrum);
 
             Controls.Add(currentView);
             Controls.Add(options);
             
 
-            views = new Dictionary<ViewVersion, PictureBox>();
+            views = new Dictionary<ViewVersion, Panel>();
             Update();
 
             spectrum.Retransformed += () =>
@@ -62,10 +62,22 @@ namespace SpectrumVisor
         private void InitViews()
         {
             var spec = spectrum.GetSpectrum();
+            var freqs = spectrum.GetFreqsValues();
+            var freqPoints = new FreqPoint[spectrum.FreqSize][];
+
+            for (var i = 0; i < freqs.Length; i++)
+            {
+                freqPoints[i] = new FreqPoint[spec[0].Length];
+
+                for (var j = 0; j < spec[0].Length; j++)
+                    freqPoints[i][j] = new FreqPoint(spec[i][j], freqs[i]);
+            }
+
+
             //разные представления спектра
             //views[ViewVersion.Linear] = new LinearSpectrum(spec);
             //views[ViewVersion.Color] = new ColorSpectrum(spec);
-            views[ViewVersion.Round] = new RoundSpectrum(spec);
+            views[ViewVersion.Round] = new RoundSpectrum(new RoundOptions(freqPoints[0]));
         }
 
         private void Update()

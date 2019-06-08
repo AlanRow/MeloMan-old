@@ -19,7 +19,7 @@ namespace SpectrumVisor
             Height = 800;
 
             var signal = new SignalManager(10, 1024);
-            //signal.AddSignalBySize(0, 1024, 0, 1.0/ 256, 10, 0, 0);
+            signal.AddSignalBySize(0, 1024, 0, 1.0/ 256, 10, 0, 0);
             //signal.AddSignalBySize(0, 1024, 0, 1.0 / 64, 5, 0, 0);
             //signal.AddSignalBySize(0, 1024, 0, 1.0 / 32, 1, 5, 0);
 

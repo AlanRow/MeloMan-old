@@ -24,6 +24,20 @@ namespace SpectrumVisor
         SignalManager signal;
 
         
+        public double[] GetFreqsValues()
+        {
+            var freqs = new double[FreqSize];
+            var f = StartFreq;
+
+            for (var i = 0; i < FreqSize; i++)
+            {
+                freqs[i] = f;
+                f += FreqStep;
+            }
+
+            return freqs;
+        }
+
         public TransformManager(ITransformer transform, SignalManager sign)
         {
             transformer = transform;

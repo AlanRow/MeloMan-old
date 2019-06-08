@@ -10,47 +10,73 @@ using System.Windows.Forms;
 namespace SpectrumVisor
 {
 
-    class RoundSpectrum : PictureBox
+    class RoundSpectrum : Panel
     {
-        private Complex[][] spectrum;
+        private RoundOptions opts;
+        private static int WHEEL_DELTA = 120;
 
-        public RoundSpectrum(Complex[][] complexes)
+        public RoundSpectrum(RoundOptions options)
         {
-            spectrum = complexes;
+            opts = options;
+            DoubleBuffered = true;
+
+            //фишка для увеличения графика при помощи скролла. Пока не работает.
+            MouseClick += (sender, ev) =>
+            {
+                opts.ZoomScale(1.1);
+                var log = new Logger("zoom.txt");
+                log.WriteLog(opts.ScalePercents.ToString());
+                log.Flush();
+            };
+
+            MouseWheel += (sender, ev) =>
+            {
+                opts.ZoomScale(1.1);
+                var log = new Logger("zoom.txt");
+                log.WriteLog(opts.ScalePercents.ToString());
+                log.Flush();
+                //opts.ZoomScale(Math.Pow(1.1, ev.Delta / WHEEL_DELTA));
+            };
+
+            Invalidate();
         } 
 
         protected override void OnPaint(PaintEventArgs args)
         {
-            var gr = args.Graphics;
-            var size = Math.Min(Width, Height);
+            var bitmapChart = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
+            //var gr = args.Graphics;
+            var scale = opts.ScalePercents / 100;
+            var size = (int)Math.Round(Math.Min(Width * scale, Height * scale));
+            var gr = Graphics.FromImage(bitmapChart);
+
+            gr.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            gr.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBilinear;
 
             gr.Clear(Color.White);
-            gr.DrawEllipse(Pens.Red, 5, 5, size - 5, size - 5);
+
+            var circlePen = new Pen(opts.CircleColor);
+            gr.DrawEllipse(circlePen, opts.CircleThickness, opts.CircleThickness, size, size);
             Point? last = null;
 
-            for (var i = 0; i < spectrum[0].Length; i++)
+            foreach (var freq in opts.Points())
             {
-                var value = spectrum[0][i];
+                var value = freq.Coords;
                 if (double.IsNaN(value.Real) || double.IsNaN(value.Imaginary))
                     break;
-
+                
                 Point? current = new Point((int)Math.Round((value.Real * size + size) / 2), (int)Math.Round((value.Imaginary * size + size) / 2));
-                gr.FillEllipse(Brushes.DarkBlue, current.Value.X, current.Value.Y, 5, 5);
 
-                var number = new Label
-                {
-                    Text = i.ToString(),
-                    Location = current.Value,
-                    Width = 10,
-                    BackColor = Color.Transparent
-                };
-                Controls.Add(number);
+                var pointBr = new SolidBrush(opts.PointColor);
+                var rad = opts.PointRadius;
+                gr.FillEllipse(pointBr, current.Value.X - rad, current.Value.Y - rad, rad, rad);
 
                 if (last != null)
                     gr.DrawLine(Pens.Orange, last.Value, current.Value);
 
                 last = current;
             }
+
+            args.Graphics.DrawImage(bitmapChart, ClientRectangle);
         }
     }
 }
