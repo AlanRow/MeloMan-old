@@ -68,10 +68,13 @@ namespace SpectrumVisor
 
                 var pointBr = new SolidBrush(opts.PointColor);
                 var rad = opts.PointRadius;
-                gr.FillEllipse(pointBr, current.Value.X - rad, current.Value.Y - rad, rad, rad);
+                gr.FillEllipse(pointBr, current.Value.X - rad, current.Value.Y - rad, 2 *rad, 2 * rad);
 
                 if (last != null)
                     gr.DrawLine(Pens.Orange, last.Value, current.Value);
+                
+                gr.DrawString(freq.Freq.ToString(), opts.TextFont, Brushes.Black, current.Value.X - rad,
+                    current.Value.Y - rad);
 
                 last = current;
             }

@@ -29,18 +29,22 @@ namespace SpectrumVisor
         public Color LineColor { get; private set; }
         public Color PointColor { get; private set; }
 
+        //тип шрифта
+        public Font TextFont { get; private set; }
+
         //дефолтный конструктор
         public RoundOptions(FreqPoint[] freqs)
         {
             freqPoints = freqs;
 
-            ScalePercents = 50;
-            PointRadius = 5;
-            TextSize = 15;
+            ScalePercents = 95;
+            PointRadius = 10;
+            TextSize = 18;
             CircleThickness = 5;
             CircleColor = Color.Red;
             LineColor = Color.Yellow;
             PointColor = Color.Green;
+            TextFont = new Font("Arial", TextSize);
         }
 
         //изменение масштаба
