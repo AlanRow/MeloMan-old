@@ -63,20 +63,22 @@ namespace SpectrumVisor
         {
             var spec = spectrum.GetSpectrum();
             var freqs = spectrum.GetFreqsValues();
-            var freqPoints = new FreqPoint[spectrum.FreqSize][];
+            var freqPoints = new FreqPoint[spec.Length][];
 
-            for (var i = 0; i < freqs.Length; i++)
+            //по идее это и должен выдавать GetSpectrum
+            for (var i = 0; i < spec.Length; i++)
             {
                 freqPoints[i] = new FreqPoint[spec[0].Length];
 
                 for (var j = 0; j < spec[0].Length; j++)
-                    freqPoints[i][j] = new FreqPoint(spec[i][j], freqs[i]);
+                    freqPoints[i][j] = new FreqPoint(spec[i][j], freqs[j]);
             }
 
 
             //разные представления спектра
             //views[ViewVersion.Linear] = new LinearSpectrum(spec);
             //views[ViewVersion.Color] = new ColorSpectrum(spec);
+            var oneSpec = freqPoints.Select((arr) => arr[0]).ToArray();
             views[ViewVersion.Round] = new RoundSpectrum(new RoundOptions(freqPoints[0]));
         }
 

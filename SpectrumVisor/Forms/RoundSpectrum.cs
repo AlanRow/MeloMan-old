@@ -44,7 +44,6 @@ namespace SpectrumVisor
         protected override void OnPaint(PaintEventArgs args)
         {
             var bitmapChart = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
-            //var gr = args.Graphics;
             var scale = opts.ScalePercents / 100;
             var size = (int)Math.Round(Math.Min(Width * scale, Height * scale));
             var gr = Graphics.FromImage(bitmapChart);
@@ -58,13 +57,16 @@ namespace SpectrumVisor
             gr.DrawEllipse(circlePen, opts.CircleThickness, opts.CircleThickness, size, size);
             Point? last = null;
 
+
+            var log = new Logger("freqsStr.txt");//log
             foreach (var freq in opts.Points())
             {
                 var value = freq.Coords;
                 if (double.IsNaN(value.Real) || double.IsNaN(value.Imaginary))
                     break;
                 
-                Point? current = new Point((int)Math.Round((value.Real * size + size) / 2), (int)Math.Round((value.Imaginary * size + size) / 2));
+                Point? current = new Point((int)Math.Round((value.Real * size + size) / 2), 
+                    (int)Math.Round((value.Imaginary * size + size) / 2));
 
                 var pointBr = new SolidBrush(opts.PointColor);
                 var rad = opts.PointRadius;
@@ -72,12 +74,16 @@ namespace SpectrumVisor
 
                 if (last != null)
                     gr.DrawLine(Pens.Orange, last.Value, current.Value);
-                
-                gr.DrawString(freq.Freq.ToString(), opts.TextFont, Brushes.Black, current.Value.X - rad,
+
+                var freqStr = freq.Freq.ToString();
+                log.WriteLog(freqStr);//log
+                gr.DrawString(freqStr, opts.TextFont, Brushes.Black, current.Value.X - rad,
                     current.Value.Y - rad);
 
                 last = current;
             }
+            log.Flush();//log
+
 
             args.Graphics.DrawImage(bitmapChart, ClientRectangle);
         }

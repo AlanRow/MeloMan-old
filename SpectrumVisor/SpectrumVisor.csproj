@@ -53,7 +53,7 @@
     <Compile Include="Forms\AddSignalDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\InputFieldGenerator.cs" />
+    <Compile Include="AddInform\InputFieldGenerator.cs" />
     <Compile Include="Forms\OptionsPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -109,6 +109,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -38,8 +38,8 @@ namespace SpectrumVisor
             freqPoints = freqs;
 
             ScalePercents = 95;
-            PointRadius = 10;
-            TextSize = 18;
+            PointRadius = 4;
+            TextSize = 10;
             CircleThickness = 5;
             CircleColor = Color.Red;
             LineColor = Color.Yellow;

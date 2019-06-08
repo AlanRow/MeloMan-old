@@ -11,9 +11,9 @@ namespace SpectrumVisor
     {
         private TransformManager transform;
 
-        private Tuple<int, bool> freqCount;
-        private Tuple<double, bool> freqStart;
-        private Tuple<double, bool> freqStep;
+        private int freqCount;
+        private double freqStart;
+        private double freqStep;
 
         public OptionsPanel(TransformManager manager) : base()
         {
@@ -29,16 +29,18 @@ namespace SpectrumVisor
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
 
+            freqCount = transform.FreqSize;
+            freqStart = transform.StartFreq;
+            freqStep = transform.FreqStep;
 
             //число частот
             var freqCountPan = IFG.InitInputField("Кол-во частот:", (value) =>
             {
                 var iValue = 0;
                 if (int.TryParse(value, out iValue))
-                    freqCount = Tuple.Create(iValue, true);
-                else
-                    freqCount = Tuple.Create(freqCount.Item1, false);
-            });
+                    freqCount = iValue;
+            },
+            freqCount);
 
 
             //шаг частоты
@@ -46,20 +48,18 @@ namespace SpectrumVisor
             {
                 var dValue = 0d;
                 if (double.TryParse(value, out dValue))
-                    freqStart = Tuple.Create(dValue, true);
-                else
-                    freqStart = Tuple.Create(freqStart.Item1, false);
-            });
+                    freqStart = dValue;
+            },
+            freqStart);
 
             //стартовая частота
             var freqStepPan = IFG.InitInputField("Изменение частоты:", (value) =>
             {
                 var dValue = 0d;
                 if (double.TryParse(value, out dValue))
-                    freqStep = Tuple.Create(dValue, true);
-                else
-                    freqStep = Tuple.Create(freqStep.Item1, false);
-            });
+                    freqStep = dValue;
+            },
+            freqStep);
 
             //кнопка обновления
             var updateButton = new Button
@@ -69,8 +69,8 @@ namespace SpectrumVisor
 
             updateButton.Click += (sender, ev) =>
             {
-                if (freqStart.Item2 && freqStep.Item2 && freqCount.Item2)
-                    transform.SetParams(freqCount.Item1, freqStep.Item1, freqStart.Item1);
+                //TODO: здесь должен быть ворох исключений
+                transform.SetParams(freqCount, freqStep, freqStart);
             };
 
             table.Controls.Add(freqStartPan, 0, 0);

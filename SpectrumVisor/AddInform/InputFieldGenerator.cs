@@ -11,28 +11,30 @@ namespace SpectrumVisor
     //InputFieldGenerator
     static class IFG
     {
-        public static Panel InitDoubleField(string label, Action<double> setter)
+        public static Panel InitDoubleField(string label, Action<double> setter, double startValue)
         {
             return InitInputField(label, (value) =>
             {
                 var dValue = 0d;
                 if (double.TryParse(value, out dValue))
                     setter(dValue);
-            });
+            },
+            startValue);
         }
 
-        public static Panel InitIntField(string label, Action<double> setter)
+        public static Panel InitIntField(string label, Action<double> setter, object startValue)
         {
             return InitInputField(label, (value) =>
             {
                 var iValue = 0;
                 if (int.TryParse(value, out iValue))
                     setter(iValue);
-            });
+            },
+            startValue);
         }
 
 
-        public static Panel InitInputField(string label, Action<string> setter)
+        public static Panel InitInputField(string label, Action<string> setter, object startValue)
         {
             var pan = new Panel();
             pan.Dock = DockStyle.Fill;
@@ -48,6 +50,7 @@ namespace SpectrumVisor
             var field = new TextBox
             {
                 Location = new Point(0, 50),
+                Text = startValue.ToString()
             };
 
             field.TextChanged += (sender, ev) =>

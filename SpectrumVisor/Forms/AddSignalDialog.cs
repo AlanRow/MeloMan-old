@@ -76,27 +76,27 @@ namespace SpectrumVisor
 
         private Panel InitStartField()
         {
-            return IFG.InitDoubleField("Начало: ", (dStart) => { start = dStart; });
+            return IFG.InitDoubleField("Начало: ", (dStart) => { start = dStart; }, start);
         }
 
         private Panel InitDurField()
         {
-            return IFG.InitDoubleField("Длительность: ", (dDur) => { dur = dDur; });
+            return IFG.InitDoubleField("Длительность: ", (dDur) => { dur = dDur; }, dur);
         }
 
         private Panel InitMultField()
         {
-            return IFG.InitDoubleField("Множитель: ", (dMult) => { mult = dMult; });
+            return IFG.InitDoubleField("Множитель: ", (dMult) => { mult = dMult; }, mult);
         }
 
         private Panel InitConstField()
         {
-            return IFG.InitDoubleField("Константа: ", (dConst) => { c = dConst; });
+            return IFG.InitDoubleField("Константа: ", (dConst) => { c = dConst; }, c);
         }
 
         private Panel InitFreqField()
         {
-            return IFG.InitDoubleField("Частота (тактов в повторе): ", (dTimes) => { freq = 1/dTimes; });
+            return IFG.InitDoubleField("Частота (тактов в повторе): ", (dTimes) => { freq = 1/dTimes; }, freq);
         }
     }
 
