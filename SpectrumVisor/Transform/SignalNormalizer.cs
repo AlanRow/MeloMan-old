@@ -8,7 +8,7 @@ namespace SpectrumVisor
 {
     class SignalNormalizer
     {
-        public double[] Norm(double[] signal)
+        virtual public double[] Norm(double[] signal)
         {
             var norm = new double[signal.Length];
 

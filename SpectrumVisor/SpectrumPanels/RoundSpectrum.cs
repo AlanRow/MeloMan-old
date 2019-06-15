@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace SpectrumVisor
 {
 
-    class RoundSpectrum : Panel
+    class RoundSpectrum : SpectrumView
     {
         private RoundOptions opts;
         private static int WHEEL_DELTA = 120;
@@ -20,6 +20,7 @@ namespace SpectrumVisor
             opts = options;
             DoubleBuffered = true;
 
+            //если в спектре только один вариант положения окна, то не имеет смысла показывать трекер
             if (opts.SpecSize > 1) {
                 var tracker = new WindowTracker(opts);
                 tracker.Dock = DockStyle.Bottom;
@@ -34,11 +35,16 @@ namespace SpectrumVisor
                 var log = new Logger("zoom.txt");
                 log.WriteLog(opts.ScalePercents.ToString());
                 log.Flush();
-                //opts.ZoomScale(Math.Pow(1.1, ev.Delta / WHEEL_DELTA));
             };
 
             Invalidate();
         } 
+
+        //реализовать метод безопасно
+        public override void Update(FreqPoint[][] newSpec)
+        {
+                opts.UpdateSpectrum(newSpec);
+        }
 
         protected override void OnPaint(PaintEventArgs args)
         {
@@ -56,9 +62,17 @@ namespace SpectrumVisor
             gr.DrawEllipse(circlePen, opts.CircleThickness, opts.CircleThickness, size, size);
             Point? last = null;
 
-            
+            var firstPoint = true;//log
             foreach (var freq in opts.Points())
             {
+                //log
+                //if (firstPoint)
+                //{
+                //    Logger.DEFLOG.WriteLog(String.Format("This was invoked with first point is {0}", freq.Coords.Magnitude));
+                //    Logger.DEFLOG.Flush();
+                //    firstPoint = false;
+                //}
+
                 var value = freq.Coords;
                 if (double.IsNaN(value.Real) || double.IsNaN(value.Imaginary))
                     break;
@@ -80,6 +94,7 @@ namespace SpectrumVisor
                 last = current;
             }
 
+            
 
             args.Graphics.DrawImage(bitmapChart, ClientRectangle);
         }

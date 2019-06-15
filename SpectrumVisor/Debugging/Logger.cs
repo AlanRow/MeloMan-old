@@ -9,6 +9,8 @@ namespace SpectrumVisor
 {
     class Logger
     {
+        public static Logger DEFLOG = new Logger("default.txt");
+
         private string path;
         private StringBuilder builder;
 

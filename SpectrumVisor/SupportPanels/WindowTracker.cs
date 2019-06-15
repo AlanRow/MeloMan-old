@@ -12,6 +12,7 @@ namespace SpectrumVisor
     {
         public WindowTracker(RoundOptions options)
         {
+
             var trackLabel = new Label
             {
                 Font = options.TextFont,

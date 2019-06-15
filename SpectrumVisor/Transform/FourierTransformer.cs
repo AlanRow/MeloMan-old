@@ -9,6 +9,13 @@ namespace SpectrumVisor
 {
     class FourierTransformer : ITransformer
     {
+        protected SignalNormalizer norm;
+
+        public FourierTransformer()
+        {
+            norm = new SignalNormalizer();
+        }
+
         virtual protected Complex findMC(double[] signal, double w)
         {
             var mc = Complex.Zero;
@@ -19,22 +26,24 @@ namespace SpectrumVisor
             return mc;
         }
 
-        public Complex[] Transform(double[] signal, int stepsCount, double wStart, double wStep)
+        virtual public FreqPoint[] Transform(double[] signal, int stepsCount, double wStart, double wStep)
         {
-            var tr = new Complex[stepsCount];
+            var tr = new FreqPoint[stepsCount];
+            var normSignal = norm.Norm(signal);
+            var step = wStart;
 
             for (var i = 0; i < stepsCount; i++)
             {
-                var step = wStart + i * wStep;//1 / (wStart + i * wStep);
-                tr[i] = findMC(signal, step);
+                tr[i] = new FreqPoint(findMC(normSignal, step), step);
+                step += wStep;
             }
 
             return tr;
         }
 
-        virtual public Complex[][] GetSpectrum(double[] signal, int stepsCount, double start, double step)
+        virtual public FreqPoint[][] GetSpectrum(double[] signal, int stepsCount, double start, double step)
         {
-            var spectrum = new Complex[][] { Transform(signal, stepsCount, start, step) };
+            var spectrum = new FreqPoint[][] { Transform(signal, stepsCount, start, step) };
             
             return spectrum;
         }

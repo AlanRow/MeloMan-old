@@ -7,24 +7,28 @@ using System.Drawing;
 
 namespace SpectrumVisor
 {
-    class RoundOptions
+    class RoundOptions : SpectrumOptions
     {
-        private FreqPoint[][] freqPoints;
-        private TransformManager manager;
+        private FreqPoint[][] spectrum;
 
-        public int CurrentSpec { get; private set; }
+        private int currentSpec;
 
         //точки на круге вместе с их частотной величиной w
         public IEnumerable<FreqPoint> Points()
         {
-            foreach (FreqPoint p in freqPoints[CurrentSpec])
+            foreach (FreqPoint p in spectrum[currentSpec])
                 yield return p;
+        }
+        
+        public void UpdateSpectrum(FreqPoint[][] newSpec)
+        {
+            spectrum = newSpec;
         }
 
         //свойства сигнала
         public int SpecSize
         {
-            get { return freqPoints.Length;}
+            get { return spectrum.Length;}
         }
         public int WinStep { get; private set; }
 
@@ -45,8 +49,8 @@ namespace SpectrumVisor
         //дефолтный конструктор
         public RoundOptions(FreqPoint[][] freqs)
         {
-            freqPoints = freqs;
-            CurrentSpec = 0;
+            spectrum = freqs;
+            currentSpec = 0;
 
             WinStep = 16;
 
@@ -63,8 +67,11 @@ namespace SpectrumVisor
         //передвинуть окно на указанный индекс
         public void ViewSpec(int ind)
         {
-            if (ind > 0 && ind < freqPoints.Length)
-                CurrentSpec = ind;
+            Logger.DEFLOG.WriteLog(String.Format("ViewSpec.ind: {0}", ind));
+            if (ind > 0 && ind < spectrum.Length)
+                currentSpec = ind;
+            Logger.DEFLOG.WriteLog(String.Format("ViewSpec.currentSpec: {0}", currentSpec));
+            Logger.DEFLOG.Flush();
         }
 
         //изменение масштаба

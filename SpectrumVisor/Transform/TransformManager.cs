@@ -10,7 +10,7 @@ namespace SpectrumVisor
     class TransformManager
     {
         private ITransformer transformer;
-        private Complex[][] spectrum;
+        private FreqPoint[][] spectrum;
         private SignalNormalizer norm;
 
         public int FreqSize { get; private set; }
@@ -74,7 +74,7 @@ namespace SpectrumVisor
                 UpdateSpectrum();
             };
 
-            spectrum = new Complex[0][];
+            spectrum = new FreqPoint[0][];
             UpdateSpectrum();
         }
 
@@ -89,18 +89,18 @@ namespace SpectrumVisor
 
         private void UpdateSpectrum()
         {
-            var normSignal = norm.Norm(signal.Sum);
+            //var normSignal = norm.Norm(signal.Sum);
 
             lock (spectrum)
             {
-                spectrum = transformer.GetSpectrum(normSignal, FreqSize, FreqStep, StartFreq);
+                spectrum = transformer.GetSpectrum(signal.Sum, FreqSize, FreqStep, StartFreq);
             }
 
             if (Retransformed != null)
                 Retransformed();
         }
 
-        public Complex[][] GetSpectrum()
+        public FreqPoint[][] GetSpectrum()
         {
             lock (spectrum)
             {

@@ -50,40 +50,48 @@
   <ItemGroup>
     <Compile Include="AddInform\FreqPoint.cs" />
     <Compile Include="AddInform\RoundOptions.cs" />
-    <Compile Include="Forms\AddSignalDialog.cs">
+    <Compile Include="AddInform\SpectrumOptions.cs" />
+    <Compile Include="SpectrumPanels\SpectrumView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SpectrumPanels\SpectrumViewManager.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SupportPanels\AddSignalDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="AddInform\InputFieldGenerator.cs" />
-    <Compile Include="Forms\OptionsPanel.cs">
+    <Compile Include="SpectrumPanels\OptionsPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Forms\RoundSpectrum.cs">
+    <Compile Include="SpectrumPanels\RoundSpectrum.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Forms\SignalDeleteConfirm.cs">
+    <Compile Include="SupportPanels\SignalDeleteConfirm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SignalsList.cs">
+    <Compile Include="SignalPanels\SignalsList.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Forms\SpectrumPanel.cs">
+    <Compile Include="SpectrumPanels\SpectrumPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Forms\WindowTracker.cs">
+    <Compile Include="SupportPanels\WindowTracker.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Transform\FourierTransformer.cs" />
+    <Compile Include="Transform\INormalizer.cs" />
     <Compile Include="Transform\ITransformer.cs" />
     <Compile Include="Debugging\Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Forms\SignalChart.cs">
+    <Compile Include="SignalPanels\SignalChart.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SignalGenerating\SignalManager.cs" />
     <Compile Include="Transform\IWindowedTransformer.cs" />
     <Compile Include="Transform\SignalNormalizer.cs" />
-    <Compile Include="Forms\SignalPanel.cs">
+    <Compile Include="SignalPanels\SignalPanel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SignalGenerating\SinGenerator.cs" />
@@ -92,6 +100,7 @@
     </Compile>
     <Compile Include="Transform\TransformManager.cs" />
     <Compile Include="Transform\WindowedFourier.cs" />
+    <Compile Include="Transform\WindowedNormalizer.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
