@@ -16,7 +16,7 @@ namespace SpectrumVisor
         public int FreqSize { get; private set; }
         public double StartFreq { get; private set;}
         public double FreqStep { get; private set; }
-        public double WndowSize { get; private set; }
+        //public double WndowSize { get; private set; }
 
         public delegate void SpectrumChanged();
         public event SpectrumChanged Retransformed;
@@ -24,6 +24,22 @@ namespace SpectrumVisor
         SignalManager signal;
 
         
+        public bool HaveWindow
+        {
+            get
+            {
+                return transformer is IWindowedTransformer;
+            }
+        }
+
+        public double WinSize
+        {
+            get
+            {
+                return (transformer as IWindowedTransformer).GetWinSize();
+            }
+        }
+
         public double[] GetFreqsValues()
         {
             var freqs = new double[FreqSize];

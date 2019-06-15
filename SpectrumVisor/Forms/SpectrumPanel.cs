@@ -79,7 +79,7 @@ namespace SpectrumVisor
             //views[ViewVersion.Linear] = new LinearSpectrum(spec);
             //views[ViewVersion.Color] = new ColorSpectrum(spec);
             var oneSpec = freqPoints.Select((arr) => arr[0]).ToArray();
-            views[ViewVersion.Round] = new RoundSpectrum(new RoundOptions(freqPoints[0]));
+            views[ViewVersion.Round] = new RoundSpectrum(new RoundOptions(freqPoints));
         }
 
         private void Update()

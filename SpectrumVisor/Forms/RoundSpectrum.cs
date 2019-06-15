@@ -20,15 +20,14 @@ namespace SpectrumVisor
             opts = options;
             DoubleBuffered = true;
 
-            //фишка для увеличения графика при помощи скролла. Пока не работает.
-            MouseClick += (sender, ev) =>
-            {
-                opts.ZoomScale(1.1);
-                var log = new Logger("zoom.txt");
-                log.WriteLog(opts.ScalePercents.ToString());
-                log.Flush();
-            };
+            if (opts.SpecSize > 1) {
+                var tracker = new WindowTracker(opts);
+                tracker.Dock = DockStyle.Bottom;
+                tracker.Invalidated += (sender, ev) => { Invalidate(); };
+                Controls.Add(tracker);
+            }
 
+            //фишка для увеличения графика при помощи скролла. Пока не работает.
             MouseWheel += (sender, ev) =>
             {
                 opts.ZoomScale(1.1);
@@ -57,8 +56,7 @@ namespace SpectrumVisor
             gr.DrawEllipse(circlePen, opts.CircleThickness, opts.CircleThickness, size, size);
             Point? last = null;
 
-
-            var log = new Logger("freqsStr.txt");//log
+            
             foreach (var freq in opts.Points())
             {
                 var value = freq.Coords;
@@ -76,13 +74,11 @@ namespace SpectrumVisor
                     gr.DrawLine(Pens.Orange, last.Value, current.Value);
 
                 var freqStr = freq.Freq.ToString();
-                log.WriteLog(freqStr);//log
                 gr.DrawString(freqStr, opts.TextFont, Brushes.Black, current.Value.X - rad,
                     current.Value.Y - rad);
 
                 last = current;
             }
-            log.Flush();//log
 
 
             args.Graphics.DrawImage(bitmapChart, ClientRectangle);

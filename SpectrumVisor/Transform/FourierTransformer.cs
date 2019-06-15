@@ -34,13 +34,7 @@ namespace SpectrumVisor
 
         virtual public Complex[][] GetSpectrum(double[] signal, int stepsCount, double start, double step)
         {
-            var spectrum = new Complex[signal.Length][];
-            var tr = Transform(signal, stepsCount, start, step);
-
-            for (var i = 0; i < spectrum.Length; i++)
-            {
-                spectrum[i] = tr;
-            }
+            var spectrum = new Complex[][] { Transform(signal, stepsCount, start, step) };
             
             return spectrum;
         }

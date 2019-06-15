@@ -23,7 +23,7 @@ namespace SpectrumVisor
             //signal.AddSignalBySize(0, 1024, 0, 1.0 / 64, 5, 0, 0);
             //signal.AddSignalBySize(0, 1024, 0, 1.0 / 32, 1, 5, 0);
 
-            var transform = new TransformManager(new FourierTransformer(), signal);
+            var transform = new TransformManager(new WindowedFourier(128), signal);
             
             signalPanel = new SignalPanel(signal);
             signalPanel.MaximumSize = new Size(400, 600);

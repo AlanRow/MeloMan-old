@@ -7,46 +7,53 @@ using System.Threading.Tasks;
 
 namespace SpectrumVisor
 {
-    class WindowedFourier : FourierTransformer
+    class WindowedFourier : FourierTransformer, IWindowedTransformer
     {
-        //public readonly int WinSize;
-        //private int start;
+        public readonly int WinSize;
+        private int start;
 
-        //public WindowedFourier(double wStart, double wStep, int stepsCount, int winSize) : base(wStart, wStep, stepsCount)
-        //{
-        //    WinSize = winSize;
-        //    start = -WinSize / 2;
-        //}
+        public WindowedFourier(int winSize) : base()
+        {
+            WinSize = winSize;
+            start = -WinSize / 2;
+        }
 
-        //protected override Complex findMC(double[] signal, double )
-        //{
-        //    var mc = Complex.Zero;
+        protected override Complex findMC(double[] signal, double w)
+        {
+            var mc = Complex.Zero;
 
-        //    for (var i = 0; i < WinSize; i++)
-        //        mc += signal[mod((i + start), signal.Length)] * Complex.FromPolarCoordinates(1, -WStart * i / signal.Length * 2 * Math.PI);
+            for (var i = start; i < WinSize / 2; i++)
+            {
+                var ind = (mod(i + WinSize, signal.Length));
+                mc += signal[ind] * Complex.FromPolarCoordinates(1, -w * i / signal.Length * 2 * Math.PI);
+            }
 
-        //    return mc;
-        //}
+            return mc;
+        }
 
-        //public override Complex[][] GetSpectrum(double[] signal)
-        //{
-        //    var spectrum = new Complex[signal.Length][];
+        public override Complex[][] GetSpectrum(double[] signal, int stepsCount, double start, double step)
+        {
+            var spectrum = new Complex[signal.Length][];
 
-        //    for (var i = 0; i < spectrum.Length; i++)
-        //    {
-        //        start++;
-        //        spectrum[i] = Transform(signal);
-        //    }
+            for (var i = 0; i < spectrum.Length; i++)
+            {
+                start++;
+                spectrum[i] = Transform(signal, stepsCount, start, step);
+            }
 
-        //    return spectrum;
-        //}
+            return spectrum;
+        }
 
-        //private static int mod(int number, int basis)
-        //{
-        //    var m = number % basis;
+        private static int mod(int number, int basis)
+        {
+            var m = number % basis;
 
-        //    return (m >= 0) ? m : basis + m;
-        //}
+            return (m >= 0) ? m : basis + m;
+        }
 
+        public double GetWinSize()
+        {
+            return WinSize;
+        }
     }
 }

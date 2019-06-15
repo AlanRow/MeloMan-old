@@ -9,14 +9,24 @@ namespace SpectrumVisor
 {
     class RoundOptions
     {
-        private FreqPoint[] freqPoints;
+        private FreqPoint[][] freqPoints;
+        private TransformManager manager;
+
+        public int CurrentSpec { get; private set; }
 
         //точки на круге вместе с их частотной величиной w
         public IEnumerable<FreqPoint> Points()
         {
-            foreach (FreqPoint p in freqPoints)
+            foreach (FreqPoint p in freqPoints[CurrentSpec])
                 yield return p;
         }
+
+        //свойства сигнала
+        public int SpecSize
+        {
+            get { return freqPoints.Length;}
+        }
+        public int WinStep { get; private set; }
 
         //настройки размеров
         public double ScalePercents { get; private set; }//масштаб в процентах
@@ -33,9 +43,12 @@ namespace SpectrumVisor
         public Font TextFont { get; private set; }
 
         //дефолтный конструктор
-        public RoundOptions(FreqPoint[] freqs)
+        public RoundOptions(FreqPoint[][] freqs)
         {
             freqPoints = freqs;
+            CurrentSpec = 0;
+
+            WinStep = 16;
 
             ScalePercents = 95;
             PointRadius = 4;
@@ -45,6 +58,13 @@ namespace SpectrumVisor
             LineColor = Color.Yellow;
             PointColor = Color.Green;
             TextFont = new Font("Arial", TextSize);
+        }
+
+        //передвинуть окно на указанный индекс
+        public void ViewSpec(int ind)
+        {
+            if (ind > 0 && ind < freqPoints.Length)
+                CurrentSpec = ind;
         }
 
         //изменение масштаба
