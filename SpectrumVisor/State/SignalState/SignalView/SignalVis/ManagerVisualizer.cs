@@ -1,0 +1,36 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SpectrumVisor
+{
+    class ManagerVisualizer : ISignalsVisualizer
+    {
+        private SignalManager manager;
+        private List<SignalViewOptions> options;
+
+        public ManagerVisualizer(SignalManager mngr)
+        {
+            manager = mngr;
+
+            options.AddRange(manager.Signals.Select((s) => new SignalViewOptions(s)));
+
+            manager.AddedSignal += (signal) => { options.Add(new SignalViewOptions(signal)); };
+            manager.DeletedSignal += (signal) => {
+                for (var i = 0; i < options.Count; i++)
+                    if (options[i].Signal.Equals(signal))
+                    {
+                        options.RemoveAt(i);
+                        break;
+                    }
+            };
+        }
+
+        public List<SignalViewOptions> GetViewOptions()
+        {
+            return options;
+        }
+    }
+}

@@ -48,59 +48,90 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddInform\FreqPoint.cs" />
-    <Compile Include="AddInform\RoundOptions.cs" />
-    <Compile Include="AddInform\SpectrumOptions.cs" />
-    <Compile Include="SpectrumPanels\SpectrumView.cs">
+    <Compile Include="State\ApplicationState.cs" />
+    <Compile Include="State\FreqPoint.cs" />
+    <Compile Include="State\SignalState\Signals\DigitalSignal.cs" />
+    <Compile Include="State\SignalState\Signals\NormalizedSignal.cs" />
+    <Compile Include="State\SignalState\SignalOptions.cs" />
+    <Compile Include="State\SignalState\Signals\ISignal.cs" />
+    <Compile Include="State\SignalState\Signals\SumSignal.cs" />
+    <Compile Include="State\SignalState\SignalView\SignalVis\AloneVisualizer.cs" />
+    <Compile Include="State\SignalState\SignalView\SignalVis\ManagerVisualizer.cs" />
+    <Compile Include="State\SignalState\SignalView\SignalVis\ISignalsVisualizer.cs" />
+    <Compile Include="State\SignalState\SignalView\SignalViewOptions.cs" />
+    <Compile Include="State\SignalState\SignalView\SignalViewState.cs" />
+    <Compile Include="State\State.cs" />
+    <Compile Include="State\SignalState\SignalView\SignalViewType.cs" />
+    <Compile Include="State\ViewState\ViewState.cs" />
+    <Compile Include="View\MainForm\SignalPanel\SignalView\SignalViewChangeButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SpectrumPanels\SpectrumViewManager.cs">
+    <Compile Include="View\MainForm\SignalPanel\SignalView\SignalViewPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SupportPanels\AddSignalDialog.cs">
+    <Compile Include="View\RoundOptions.cs" />
+    <Compile Include="View\SpectrumOptions.cs" />
+    <Compile Include="View\MainForm\SpectrumPanel\OptionsManager.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\MainForm\SpectrumPanel\OptionsPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\MainForm\SpectrumPanel\SpectrumView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\MainForm\SpectrumPanel\SpectrumViewManager.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\MainForm\SpectrumPanel\StandartOptions.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\MainForm\SpectrumPanel\WindowedOptions.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\MainForm\SignalPanel\SignalAddView\AddSignalDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddInform\InputFieldGenerator.cs" />
-    <Compile Include="SpectrumPanels\OptionsPanel.cs">
+    <Compile Include="View\InputFieldGenerator.cs" />
+    <Compile Include="View\MainForm\SpectrumPanel\OptionsGenerator.cs" />
+    <Compile Include="View\MainForm\SpectrumPanel\RoundSpectrum.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SpectrumPanels\RoundSpectrum.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="SupportPanels\SignalDeleteConfirm.cs">
+    <Compile Include="View\MainForm\SupportPanels\SignalDeleteConfirm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SignalPanels\SignalsList.cs">
+    <Compile Include="View\MainForm\SignalPanel\SignalList\SignalsList.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SpectrumPanels\SpectrumPanel.cs">
+    <Compile Include="View\MainForm\SpectrumPanel\SpectrumPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SupportPanels\WindowTracker.cs">
+    <Compile Include="View\MainForm\SupportPanels\WindowTracker.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Transform\FourierTransformer.cs" />
-    <Compile Include="Transform\INormalizer.cs" />
-    <Compile Include="Transform\ITransformer.cs" />
+    <Compile Include="State\TransformOptions\StdOptions.cs" />
+    <Compile Include="State\Transformers\Simple\FourierTransformer.cs" />
+    <Compile Include="State\Normalized\INormalizer.cs" />
+    <Compile Include="State\Transformers\Simple\ITransformer.cs" />
     <Compile Include="Debugging\Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SignalPanels\SignalChart.cs">
+    <Compile Include="View\MainForm\SignalPanel\SignalView\SignalChart.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SignalGenerating\SignalManager.cs" />
-    <Compile Include="Transform\IWindowedTransformer.cs" />
-    <Compile Include="Transform\SignalNormalizer.cs" />
-    <Compile Include="SignalPanels\SignalPanel.cs">
+    <Compile Include="State\Managers\SignalManager.cs" />
+    <Compile Include="State\Transformers\Windowed\IWindowedTransformer.cs" />
+    <Compile Include="State\Normalized\SignalNormalizer.cs" />
+    <Compile Include="View\MainForm\SignalPanel\SignalPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SignalGenerating\SinGenerator.cs" />
-    <Compile Include="Forms\SpectrumVisorForm.cs">
+    <Compile Include="State\SignalState\Signals\SinSignal.cs" />
+    <Compile Include="View\MainForm\SpectrumVisorForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Transform\TransformManager.cs" />
-    <Compile Include="Transform\WindowedFourier.cs" />
-    <Compile Include="Transform\WindowedNormalizer.cs" />
+    <Compile Include="State\Managers\TransformManager.cs" />
+    <Compile Include="State\Transformers\Windowed\WindowedFourier.cs" />
+    <Compile Include="State\Normalized\WindowedNormalizer.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -124,7 +155,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Exceptions\" />
+    <Folder Include="State\Exceptions\" />
+    <Folder Include="State\ViewState\Signal\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
