@@ -8,12 +8,11 @@ namespace SpectrumVisor
 {
     class ManagerVisualizer : ISignalsVisualizer
     {
-        private SignalManager manager;
         private List<SignalViewOptions> options;
 
-        public ManagerVisualizer(SignalManager mngr)
+        public ManagerVisualizer(SignalManager manager)
         {
-            manager = mngr;
+            options = new List<SignalViewOptions>();
 
             options.AddRange(manager.Signals.Select((s) => new SignalViewOptions(s)));
 

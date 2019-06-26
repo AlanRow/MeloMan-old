@@ -12,29 +12,27 @@ namespace SpectrumVisor
     //INCOMPLETE
     class SignalViewState
     {
-        public SignalViewType CurrentType { get; set; }
+        public static SignalViewType DEFAULT_VIEW = SignalViewType.Summarized;
 
+        public SignalViewType CurrentType { get; set; }
         private Dictionary<SignalViewType, ISignalsVisualizer> views;
 
-        public SignalViewState(ApplicationState state, SignalViewType current)
+        public SignalViewState(SignalManager manager, SignalViewType current)
         {
             views = new Dictionary<SignalViewType, ISignalsVisualizer>();
-            AddSignal( new AloneVisualizer(state.InternalState.Signal.Sum), SignalViewType.Summarized);
-            AddSignal(new ManagerVisualizer(state.InternalState.Signal), SignalViewType.Divided);
+            AddSignal( new AloneVisualizer(manager.Sum), SignalViewType.Summarized);
+            AddSignal(new ManagerVisualizer(manager), SignalViewType.Divided);
 
             var divided = new List<SignalViewOptions>();
-            
-
 
             CurrentType = current;
         }
 
-        public SignalViewState(ApplicationState state) : this(state, SignalViewType.Summarized) { }
-
-        //RECONSTRUCT
+        public SignalViewState(SignalManager manager) : this(manager, DEFAULT_VIEW) { }
+        
         public void AddSignal(ISignalsVisualizer signals, SignalViewType type)
         {
-            //views[type] = signals;
+            views[type] = signals;
         }
 
         public ISignalsVisualizer GetCurrentViews()

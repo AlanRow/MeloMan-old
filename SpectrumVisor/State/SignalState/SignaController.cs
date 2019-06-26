@@ -14,13 +14,13 @@ namespace SpectrumVisor
         public readonly SignalManager Internal;
         public readonly SignalViewState View;
 
-        public SignalController(ApplicationState state, int size)
+        public SignalController(int size)
         {
             Internal = new SignalManager(size);
-            View = new SignalViewState(state);
+            View = new SignalViewState(Internal);
         }
 
-        public SignalController(ApplicationState state) : this(state, DEFAULT_SIZE)
+        public SignalController() : this(DEFAULT_SIZE)
         { }
     }
 }

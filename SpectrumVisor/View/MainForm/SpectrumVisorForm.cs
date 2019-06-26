@@ -12,7 +12,7 @@ namespace SpectrumVisor
     {
         private ApplicationState state;
         private SignalPanel signalPanel;
-        private SpectrumPanel spectrumPanel;
+        //private SpectrumPanel spectrumPanel;
 
         public SpectrumVisorForm() : base()
         {
@@ -29,14 +29,14 @@ namespace SpectrumVisor
 
             //добавление панелей
             Controls.Add(signalPanel);
-            Controls.Add(spectrumPanel);
+            //Controls.Add(spectrumPanel);
 
 
             Load += (sender, ev) => OnSizeChanged(EventArgs.Empty);
             SizeChanged += (sender, ev) =>
             {
                 signalPanel.Size = new Size(Width * 40 / 100, Height - 100);
-                spectrumPanel.SetBounds(Width * 45 / 100, 0, Width / 2, Height - 100);
+                //spectrumPanel.SetBounds(Width * 45 / 100, 0, Width / 2, Height - 100);
             };
         }
     }

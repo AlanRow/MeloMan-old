@@ -14,7 +14,7 @@ namespace SpectrumVisor
     {
         public SignalChart(ApplicationState state) : base()
         {
-            var view = state.View.SignalView;
+            var view = state.Signal.View;
             //получаем текущие сигналы для вывода на экран
             var signalsOpts = view.GetCurrentViews().GetViewOptions();
 

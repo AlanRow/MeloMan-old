@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="State\ApplicationState.cs" />
     <Compile Include="State\FreqPoint.cs" />
+    <Compile Include="State\SignalState\SignaController.cs" />
     <Compile Include="State\SignalState\Signals\DigitalSignal.cs" />
     <Compile Include="State\SignalState\Signals\NormalizedSignal.cs" />
     <Compile Include="State\SignalState\SignalOptions.cs" />
@@ -62,7 +63,6 @@
     <Compile Include="State\SignalState\SignalView\SignalViewState.cs" />
     <Compile Include="State\State.cs" />
     <Compile Include="State\SignalState\SignalView\SignalViewType.cs" />
-    <Compile Include="State\ViewState\ViewState.cs" />
     <Compile Include="View\MainForm\SignalPanel\SignalView\SignalViewChangeButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -156,7 +156,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="State\Exceptions\" />
-    <Folder Include="State\ViewState\Signal\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

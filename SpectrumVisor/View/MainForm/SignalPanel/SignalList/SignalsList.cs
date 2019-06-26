@@ -16,7 +16,7 @@ namespace SpectrumVisor
 
         public SignalsList(ApplicationState state) : base()
         {
-            var manager = state.InternalState.Signal;
+            var manager = state.Signal.Internal;
 
             Height = (manager.Signals.Count + 1) * frameHeight + 50;
             FlowDirection = FlowDirection.LeftToRight;

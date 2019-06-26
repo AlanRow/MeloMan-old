@@ -12,12 +12,10 @@ namespace SpectrumVisor
     class ApplicationState
     {
         public SignalController Signal { get; private set; }
-        //public ViewState View { get; private set; }
 
         public ApplicationState()
         {
-            Signal = new SignalController(this);
-            //View = new ViewState(this);
+            Signal = new SignalController();
         }
     }
 }

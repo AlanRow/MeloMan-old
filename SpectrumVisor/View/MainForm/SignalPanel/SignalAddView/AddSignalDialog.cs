@@ -107,11 +107,11 @@ namespace SpectrumVisor
                 }
                 catch (FormatException ex)
                 {
-                    ThrowError("Константа сигнала должна быть действительным числом.");
+                    ThrowError("Константа сигнала должна быть действительным числом. " + ex.Message + "\n\r Value: " + val);
                 }
                 catch (ArgumentException ex)
                 {
-                    ThrowError("Константа сигнала должна быть действительным числом.");
+                    ThrowError("Константа сигнала должна быть действительным числом. " + ex.Message + " " + val );
                 }
             }, opts.Const), 1, 2);
 
@@ -137,10 +137,12 @@ namespace SpectrumVisor
             };
             table.Controls.Add(cancelButton, 1, 3);
 
+            //надпись об ошибке
             errorLabel = new Label
             {
                 Text = "",
-                ForeColor = Color.Red
+                ForeColor = Color.Red,
+                AutoSize = true
             };
 
             table.Controls.Add(errorLabel, 0, 4);
