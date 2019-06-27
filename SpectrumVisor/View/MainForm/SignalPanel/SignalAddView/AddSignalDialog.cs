@@ -14,21 +14,14 @@ namespace SpectrumVisor
         private SignalOptions opts;
         private Label errorLabel;
 
-        //private string name;
-        //private double start;
-        //private double dur;
-        //private double mult;
-        //private double freq;
-        //private double c;
-
-        public AddSignalDialog(SignalManager signals)
+        public AddSignalDialog(SignalController signal)
         {
             //фиксирование размеров
             Width = 400;
             Height = 600;
             FormBorderStyle = FormBorderStyle.FixedDialog;
 
-            opts = new SignalOptions(0, signals.Size);
+            opts = new SignalOptions(0, signal.Internal.Size);
 
             var table = new TableLayoutPanel();
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 20));
@@ -40,80 +33,20 @@ namespace SpectrumVisor
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
 
-            table.Controls.Add(IFG.InitInputField("Начало:", (val) => {
-                try
-                {
-                    opts.Start = Int32.Parse(val.ToString());
-                } catch (FormatException ex)
-                {
-                    ThrowError("Начало сигнала должно быть целым числом.");
-                } catch (ArgumentException ex)
-                {
-                    ThrowError("Начало сигнала должно быть целым положительным числом.");
-                }
-            }, opts.Start), 0, 0);
+            var startField = new SubscribedField("Начало: ", "Начало сигнала должно быть целым положительным числом.", opts.Start.ToString());
+            var durField = new SubscribedField("Продолжительность:", "Продолжительность сигнала должна быть целым положительным числом.", opts.Duration.ToString());
+            var freqField = new SubscribedField("Частота повторения ():", "Частота повторения  сигнала должна быть действительным числом.", opts.Freq.ToString());
+            var multField = new SubscribedField("Множитель:", "Множитель сигнала должен быть действительным числом.", opts.Mult.ToString());
+            var constField = new SubscribedField("Константа:", "Константа сигнала должна быть действительным числом. ", opts.Const.ToString());
 
-            table.Controls.Add(IFG.InitInputField("Продолжительность:", (val) => {
-                try
-                {
-                    opts.Duration = Int32.Parse(val.ToString());
-                }
-                catch (FormatException ex)
-                {
-                    ThrowError("Продолжительность сигнала должна быть целым числом.");
-                }
-                catch (ArgumentException ex)
-                {
-                    ThrowError("Продолжительность сигнала должна быть целым положительным числом.");
-                }
-            }, opts.Duration), 0, 1);
-            
-            table.Controls.Add(new Panel(), 0, 2);
-
-            table.Controls.Add(IFG.InitInputField("Частота повторения ():", (val) => {
-                try
-                {
-                    opts.Freq = Double.Parse(val.ToString());
-                }
-                catch (FormatException ex)
-                {
-                    ThrowError("Частота повторения  сигнала должна быть действительным числом.");
-                }
-                catch (ArgumentException ex)
-                {
-                    ThrowError("Частота повторения  сигнала должна быть действительным числом.");
-                }
-            }, opts.Freq), 1, 0);
-
-            table.Controls.Add(IFG.InitInputField("Множитель:", (val) => {
-                try
-                {
-                    opts.Mult = Double.Parse(val.ToString());
-                }
-                catch (FormatException ex)
-                {
-                    ThrowError("Множитель сигнала должен быть действительным числом.");
-                }
-                catch (ArgumentException ex)
-                {
-                    ThrowError("Множитель сигнала должен быть действительным числом.");
-                }
-            }, opts.Mult), 1, 1);
-
-            table.Controls.Add(IFG.InitInputField("Константа:", (val) => {
-                try
-                {
-                    opts.Const = Double.Parse(val.ToString());
-                }
-                catch (FormatException ex)
-                {
-                    ThrowError("Константа сигнала должна быть действительным числом. " + ex.Message + "\n\r Value: " + val);
-                }
-                catch (ArgumentException ex)
-                {
-                    ThrowError("Константа сигнала должна быть действительным числом. " + ex.Message + " " + val );
-                }
-            }, opts.Const), 1, 2);
+            var container = new OptionsParser
+            {
+                Start = startField,
+                Duration = durField,
+                Frequency = freqField,
+                Mult = multField,
+                Const = constField
+            };
 
             var okButton = new Button
             {
@@ -121,11 +54,25 @@ namespace SpectrumVisor
             };
             okButton.Click += (sender, ev) =>
             {
-                signals.AddSignal(new SinSignal(opts));
-                Close();
+                opts = container.GetOptions();
+
+                if (opts == null)
+                {
+                    ThrowErrors(container.ErrorMessages);
+                }
+                else
+                {
+                    try
+                    {
+                        signal.AddSignal(new SinSignal(opts));
+                        Close();
+                    } catch (ArgumentException ex)
+                    {
+                        ThrowErrors(ex.Message);
+                    }
+                }
             };
 
-            table.Controls.Add(okButton, 0, 3);
 
             var cancelButton = new Button
             {
@@ -135,7 +82,6 @@ namespace SpectrumVisor
             {
                 Close();
             };
-            table.Controls.Add(cancelButton, 1, 3);
 
             //надпись об ошибке
             errorLabel = new Label
@@ -144,34 +90,69 @@ namespace SpectrumVisor
                 ForeColor = Color.Red,
                 AutoSize = true
             };
+            
+            table.Controls.Add(startField, 0, 0);
+            table.Controls.Add(durField, 1, 0);
+            table.Controls.Add(freqField, 0, 1);
+            table.Controls.Add(multField, 1, 1);
+            table.Controls.Add(constField, 0, 2);
+
+            table.Controls.Add(okButton, 0, 3);
+            table.Controls.Add(cancelButton, 1, 3);
 
             table.Controls.Add(errorLabel, 0, 4);
 
             table.Dock = DockStyle.Fill;
-
             Controls.Add(table);
         }
 
-        private void ThrowError(string errorMessage)
+        private void ThrowErrors(List<string> errorMessage)
         {
-            errorLabel.Text = errorMessage;
+            var errors = new StringBuilder();
+            errors.Append(errorMessage[0]);
+
+            for (var i = 1; i < errorMessage.Count; i++)
+            {
+                errors.Append("\n\r");
+                errors.Append(errorMessage);
+            }
+
+            errorLabel.Text = errors.ToString();
             Invalidate();
+        }
+
+        private void ThrowErrors(string errorMessage)
+        {
+            var list = new List<string>();
+            list.Add(errorMessage);
+            ThrowErrors(list);
         }
     }
 
     class SubscribedField : Panel
     {
         public TextBox Field { get; private set;}
+        public string ErrorMessage { get; private set; }
 
-        public SubscribedField(string label)
+        public SubscribedField(string label, string message, string defaultValue)
         {
-            Controls.Add(new Label
-            {
-                Font = new System.Drawing.Font("Arial", 16),
-                Text = label
-            });
+            ErrorMessage = message;
 
-            Field = new TextBox();
+            var name = new Label
+            {
+                Font = new System.Drawing.Font("Arial", 10),
+                Text = label,
+                AutoSize = true
+            };
+            
+            Field = new TextBox
+            {
+                Width = 200,
+                Text = defaultValue,
+                Location = new Point(0, name.Height)
+            };
+
+            Controls.Add(name);
             Controls.Add(Field);
         }
     }

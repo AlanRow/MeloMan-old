@@ -65,7 +65,7 @@ namespace SpectrumVisor
         }
 
         public SignalOptions(int startIndex, int durationLength) : this(startIndex, durationLength,
-                                                                         durationLength / 8, 1, 0)
+                                                                         128.0/durationLength, 100, 0)
         { }
 
         public string GetTextFormula()

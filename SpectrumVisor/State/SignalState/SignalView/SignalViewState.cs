@@ -12,7 +12,7 @@ namespace SpectrumVisor
     //INCOMPLETE
     class SignalViewState
     {
-        public static SignalViewType DEFAULT_VIEW = SignalViewType.Summarized;
+        public static SignalViewType DEFAULT_VIEW = SignalViewType.Divided;
 
         public SignalViewType CurrentType { get; set; }
         private Dictionary<SignalViewType, ISignalsVisualizer> views;
@@ -20,8 +20,8 @@ namespace SpectrumVisor
         public SignalViewState(SignalManager manager, SignalViewType current)
         {
             views = new Dictionary<SignalViewType, ISignalsVisualizer>();
-            AddSignal( new AloneVisualizer(manager.Sum), SignalViewType.Summarized);
-            AddSignal(new ManagerVisualizer(manager), SignalViewType.Divided);
+            SetView( new AloneVisualizer(manager.Sum), SignalViewType.Summarized);
+            SetView(new ManagerVisualizer(manager), SignalViewType.Divided);
 
             var divided = new List<SignalViewOptions>();
 
@@ -29,8 +29,13 @@ namespace SpectrumVisor
         }
 
         public SignalViewState(SignalManager manager) : this(manager, DEFAULT_VIEW) { }
+
+        public void AddSignal(SinSignal signal, SignalViewType type)
+        {
+            views[type].AddSignal(signal);
+        }
         
-        public void AddSignal(ISignalsVisualizer signals, SignalViewType type)
+        public void SetView(ISignalsVisualizer signals, SignalViewType type)
         {
             views[type] = signals;
         }

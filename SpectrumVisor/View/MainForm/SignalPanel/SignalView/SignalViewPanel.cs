@@ -13,14 +13,14 @@ namespace SpectrumVisor
         public SignalViewPanel(ApplicationState state)
         {
             //кнопка изменения типа представления
-            //var viewButton = new SignalViewChangeButton(state);
+            var viewButton = new SignalViewChangeBox(state);
             //панель представления сигнала
-            var viewer = new SignalChart(state);
+            var viewer = new SignalChart(state.Signal);
 
             //viewButton.Dock = DockStyle.Top;
             viewer.Dock = DockStyle.Fill;
 
-            //Controls.Add(viewButton);
+            Controls.Add(viewButton);
             Controls.Add(viewer);
         }
     }

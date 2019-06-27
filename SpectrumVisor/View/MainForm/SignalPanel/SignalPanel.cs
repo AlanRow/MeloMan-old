@@ -18,8 +18,6 @@ namespace SpectrumVisor
      */
     class SignalPanel : Panel
     {
-        private ApplicationState state;
-
         static private Size minViewSize = new Size(200, 150);
 
         private SignalViewPanel view;
@@ -43,61 +41,5 @@ namespace SpectrumVisor
             Controls.Add(list);
             Invalidate();
         }
-
-        //private void InitCharts()
-        //{
-        //    Reconstruct();
-            
-        //    foreach (var view in signalViewes.Values)
-        //    {
-        //        //увеличенный график
-        //        var dialog = new Form();
-
-        //        //отображается при клике по уменьшенному
-        //        view.MouseClick += (obj, even) =>
-        //        {
-        //            var bigChart = new SignalChart(signalState.Signals, signalState.Size);
-        //            bigChart.Width = 750;
-        //            bigChart.Height = 750;
-        //            dialog.Controls.Add(bigChart);
-        //            dialog.ShowDialog();
-        //        };
-        //    }
-        //}
-
-        //private Button GetSwitchButton()
-        //{
-        //    var button = new Button();
-        //    button.Click += (sender, ev) =>
-        //    {
-        //        switch (viewType)
-        //        {
-        //            case SignalViewType.Signals:
-        //                viewSwitchButton.Text = "Суммарный";
-        //                viewType = SignalViewType.Sum;
-        //                Invalidate();
-        //                break;
-        //            case SignalViewType.Sum:
-        //                viewSwitchButton.Text = "Разделенный";
-        //                viewType = SignalViewType.Signals;
-        //                Invalidate();
-        //                break;
-        //        }
-                
-        //        Controls.Remove(currentView);
-        //        currentView = signalViewes[viewType];
-        //        Controls.Add(currentView);
-        //        OnSizeChanged(EventArgs.Empty);
-        //        Invalidate();
-        //    };
-
-        //    return button;
-        //}
-
-        //private void Reconstruct()
-        //{
-        //    signalViewes[SignalViewType.Signals] = new SignalChart(signalState.Signals, signalState.Size);
-        //    signalViewes[SignalViewType.Sum] = new SignalChart(signalState.Sum);
-        //}
     }
 }

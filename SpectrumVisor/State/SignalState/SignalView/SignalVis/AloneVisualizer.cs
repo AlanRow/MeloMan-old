@@ -18,9 +18,17 @@ namespace SpectrumVisor
             alone.Add(new SignalViewOptions(signal, Color.Yellow));
         }
 
+        //не будет никакого эффекта, т.к. в одиночный сигнал нельзя добавлять сигналы
+        public void AddSignal(SinSignal signal)
+        {
+            return;
+        }
+
         public List<SignalViewOptions> GetViewOptions()
         {
             return alone;
         }
+
+
     }
 }

@@ -14,6 +14,9 @@ namespace SpectrumVisor
         public readonly SignalManager Internal;
         public readonly SignalViewState View;
 
+        public delegate void SignalChanged();
+        public SignalChanged ViewChanged;
+
         public SignalController(int size)
         {
             Internal = new SignalManager(size);
@@ -22,5 +25,18 @@ namespace SpectrumVisor
 
         public SignalController() : this(DEFAULT_SIZE)
         { }
+
+        public void AddSignal(SinSignal sinSignal)
+        {
+            Internal.AddSignal(sinSignal);
+            View.AddSignal(sinSignal, SignalViewType.Divided);
+            ViewChanged();
+        }
+
+        public void SwitchView(SignalViewType type)
+        {
+            View.CurrentType = type;
+            ViewChanged();
+        }
     }
 }

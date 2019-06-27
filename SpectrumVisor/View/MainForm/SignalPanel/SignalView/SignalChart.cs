@@ -10,16 +10,31 @@ using System.Drawing;
 namespace SpectrumVisor
 {
     //выводит диаграму текущих сигналов
-    class SignalChart : Chart
+    class SignalChart : Panel
     {
-        public SignalChart(ApplicationState state) : base()
+        private SignalViewState view;
+
+        public SignalChart(SignalController signal) : base()
         {
-            var view = state.Signal.View;
+            view = signal.View;
+            var chart = GenerateChart();
+            Controls.Add(chart);
+            signal.ViewChanged += () => {
+                Controls.Remove(chart);
+                chart = GenerateChart();
+                Controls.Add(chart);
+            };
+        }
+
+        public Chart GenerateChart()
+        {
             //получаем текущие сигналы для вывода на экран
             var signalsOpts = view.GetCurrentViews().GetViewOptions();
 
-            Titles.Add(view.GetCurrentName());
-            ChartAreas.Add("signal");
+            var chart = new Chart();
+
+            chart.Titles.Add(view.GetCurrentName());
+            chart.ChartAreas.Add("signal");
 
             for (var i = 0; i < signalsOpts.Count; i++)
             {
@@ -32,31 +47,18 @@ namespace SpectrumVisor
                 signalSeries.Color = color;
 
                 var j = 0;
+                var log = new Logger("view_values.1.txt");
                 foreach (var val in signal.GetValues())
                 {
                     signalSeries.Points.AddXY(j, val);
+                    log.WriteLog(j + ": " + val);
                     j++;
                 }
-               
-               Series.Add(signalSeries);
+
+                chart.Series.Add(signalSeries);
             }
+
+            return chart;
         }
-
-        //public SignalChart(double[] signal)
-        //{
-        //    Titles.Add("Summarized signal");
-        //    ChartAreas.Add("sum");
-        //    Series signalSeries = new Series("sum");
-
-        //    for (var j = 0; j < signal.Length; j++)
-        //    {
-        //        signalSeries.Points.AddXY(j, signal[j]);
-        //    }
-
-        //    signalSeries.ChartType = SeriesChartType.Line;
-        //    signalSeries.ChartArea = "sum";
-        //    signalSeries.Color = Color.Red;
-        //    Series.Add(signalSeries);
-        //}
     }
 }

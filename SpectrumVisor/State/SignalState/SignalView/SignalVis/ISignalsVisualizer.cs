@@ -9,5 +9,7 @@ namespace SpectrumVisor
     interface ISignalsVisualizer
     {
         List<SignalViewOptions> GetViewOptions();
+
+        void AddSignal(SinSignal signal);
     }
 }

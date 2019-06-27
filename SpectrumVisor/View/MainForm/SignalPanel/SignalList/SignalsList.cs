@@ -28,7 +28,7 @@ namespace SpectrumVisor
             //    VerticalScroll.Value = scroll.Value;
             //};
 
-            addButton = GetAddButton(manager);
+            addButton = GetAddButton(state.Signal);
 
             for (var i = 0; i < manager.Signals.Count; i++)
             {
@@ -40,7 +40,7 @@ namespace SpectrumVisor
             //Controls.Add(scroll);
         }
 
-        private Button GetAddButton(SignalManager manager)
+        private Button GetAddButton(SignalController signalState)
         {
             var button = new Button
             {
@@ -51,7 +51,7 @@ namespace SpectrumVisor
 
             button.Click += (sender, ev) =>
             {
-                var creatingDialog = new AddSignalDialog(manager).ShowDialog();
+                var creatingDialog = new AddSignalDialog(signalState).ShowDialog();
             };
 
             return button;
