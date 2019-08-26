@@ -10,5 +10,6 @@ namespace SpectrumVisor
     interface ISignal
     {
         IEnumerable<double> GetValues();
+        int GetLength();
     }
 }

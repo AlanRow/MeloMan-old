@@ -15,6 +15,11 @@ namespace SpectrumVisor.State.Signal
             signal = values;
         }
 
+        public int GetLength()
+        {
+            return signal.Length;
+        }
+
         public IEnumerable<double> GetValues()
         {
             return signal;

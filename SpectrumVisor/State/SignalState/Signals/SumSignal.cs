@@ -16,6 +16,11 @@ namespace SpectrumVisor
             manager = main;
         }
 
+        public int GetLength()
+        {
+            return manager.Size;
+        }
+
         public IEnumerable<double> GetValues()
         {
             for (var i = 0; i < manager.Size; i++)

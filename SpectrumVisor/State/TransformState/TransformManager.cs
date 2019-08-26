@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace SpectrumVisor
 {
+    //агрегирует преобразование и позволяет его изменять
     class TransformManager
     {
         private ITransformer transformer;
@@ -44,7 +45,7 @@ namespace SpectrumVisor
         {
             transformers = new Dictionary<TransformType, ITransformer>
             {
-                [TransformType.Fourier] = new FourierTransformer(sign),
+                [TransformType.Fourier] = new CachTransformer(new SimpleSpectrumGener(sign.)),
                 //[TransformType.Windowed] = new WindowedFourier()
             };
 

@@ -16,6 +16,11 @@ namespace SpectrumVisor
             Options = options;
         }
 
+        public int GetLength()
+        {
+            return Options.Duration;
+        }
+
         public double GetValueAt(int i)
         {
             return (i < Options.Start || i >= Options.Start + Options.Duration) ? 0 :
